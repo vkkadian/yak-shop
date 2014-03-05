@@ -1,0 +1,83 @@
+
+<html>
+<head>
+<title>The Yak Shop</title>
+<script type="text/javascript">
+	function placeOrder() {
+		var frm = document.getElementById('orderForm');
+		var url = "/yak-shop/order/" + frm.elapsedTime.value;
+		var data = {};
+		data.customer = frm.customer.value;
+		data.order = {};
+		data.order.milk = frm.milk.value;
+		data.order.skins = frm.skins.value;
+		
+		var xmlhttp;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4) {
+				
+				var cMsg = "";
+				if(xmlhttp.status==201){
+					cMsg = "Order completely fulfilled";
+				}
+				else if(xmlhttp.status==206){
+					cMsg = xmlhttp.status + ":Order partially fulfilled";
+				}				
+				else if(xmlhttp.status==404){
+					cMsg = xmlhttp.status + ":Out of stock: Order can not be fulfilled";
+				}				
+				else{
+					cMsg = xmlhttp.status + ":Error occured";
+				}
+				document.getElementById('msgPanel').innerHTML = cMsg + "\n" + xmlhttp.responseText;
+			}
+		}
+		data = JSON.stringify(data);
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader("Accept", "application/json")
+		xmlhttp.setRequestHeader("Content-Type", "application/json")
+		xmlhttp.send(data);
+	}
+</script>
+</head>
+<body bgcolor="#aabbff" >
+	<div id="mPanel">
+	<div id="fPanel" style="border:solid">
+	<h1>Customer Order Form</h1>
+	<form id="orderForm" method="post">
+		<table>
+		<tr>
+			<td>Name:</td>
+			<td><input type="text" name="customer" value="Medvedev" /></td>
+		</tr>	
+		<tr>
+			<td>Milk:</td>
+			<td><input type="text" name="milk" /></td>
+		</tr>	
+		<tr>
+			<td>Hides:</td>
+			<td> <input type="number" name="skins" /></td>
+		</tr>
+		<tr>
+			<td>Elapsed Time (Days):</td>
+			<td><input type="number" name="elapsedTime" /></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="button" value="Submit" onclick="javascript:placeOrder();" /></td>
+		</tr>
+		</table>
+	</form>
+	</div>
+	<div id="cPanel" style="border:solid">
+		<h3>Order Confirmation Message Panel</h3>
+		<div id="msgPanel" style="color:brown"></div>
+	</div>
+	</div>
+</body>
+</html>
