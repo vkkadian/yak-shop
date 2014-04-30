@@ -37,7 +37,7 @@ public class YakShopRESTService {
 		sb.append("\t\t" + milk + " litres of milk\n");
 		sb.append("\t\t" + skins + " skins of wool\n");
 		sb.append("\tHerd:\n");
-		for (Yak yak : YakShopKeeper.getHerd().getYaks()) {
+		for (Yak yak : YakShopKeeper.getHerd(timeElapsed).getYaks()) {
 			sb.append("\t\t" + yak.getName() + " " + yak.getAge()
 					+ " years old\n");
 		}
